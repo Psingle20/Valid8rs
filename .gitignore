@@ -1,0 +1,76 @@
+# General system files
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoint
+
+# Virtual environment & dependencies
+poetry.lock
+Pipfile
+Pipfile.lock
+requirements.txt
+
+# JavaScript/Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.yarn/
+.pnp/
+.pnp.js
+dist/
+build/
+
+# TypeScript
+*.tsbuildinfo
+
+# LLM (Groq, OpenAI, etc.)
+*.cache/
+*.jsonl  # Used for dataset storage
+*.sqlite  # Used for local vector databases
+*.pkl  # Serialized ML models
+vector_store/
+logs/
+checkpoints/
+
+# Environment Variables & Secrets
+.env
+.env.*
+*.key
+*.pem
+secrets.json
+config.json  # If storing API keys, use config.example.json instead
+
+# VS Code
+.vscode/
+.settings/
+
+# JetBrains (PyCharm, WebStorm, etc.)
+.idea/
+
+# macOS/Linux
+*.DS_Store
+*.AppleDouble
+.Trash
+
+# Windows
+Thumbs.db
+ehthumbs.db
