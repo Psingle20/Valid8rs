@@ -1,0 +1,29 @@
+{
+  "name": "Valida8e - Detect Fake News!",
+  "manifest_version": 3,
+  "version": "1.0",
+  "description": "Detect fake news easily. Verify your sources & check confidence for all claims!",
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "contextMenus",
+    "notifications",
+    "storage",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "logo.png"
+  },
+  "icons": {
+    "32": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
+  },
+  "host_permissions": [
+    "<all_urls>"
+  ]
+}
