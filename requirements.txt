@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+python-dotenv
+pydantic
+pydantic-settings
+tweepy
+groq
+beautifulsoup4
+wikipedia
+duckduckgo-search
+langgraph
+python-multipart
+httpx
+requests
