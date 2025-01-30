@@ -7,6 +7,7 @@ from .config import get_settings
 from .utils.logging import setup_logging, get_logger
 from .api.routes import router
 from .api.dependencies import check_results
+import os
 
 settings = get_settings()
 setup_logging()
@@ -61,4 +62,5 @@ from app.utils.logging import setup_logging
 
 if __name__ == "__main__":
     setup_logging()
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+    port=os.getenv("PORT", default=5000)
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=True)
