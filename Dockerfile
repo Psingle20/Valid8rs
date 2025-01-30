@@ -13,4 +13,6 @@ RUN pip install --no-cache-dir --verbose fastapi uvicorn python-dotenv pydantic 
 EXPOSE $PORT
 
 # Command to run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "$PORT", "--reload"]
+# CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "$PORT", "--reload"]
+# Command to run the application
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $PORT"]
