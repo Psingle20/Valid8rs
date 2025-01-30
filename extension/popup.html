@@ -33,14 +33,20 @@
     <script src="https://cdn.jsdelivr.net/npm/daisyui@latest"></script>
   </head>
   <body
-    class="w-full h-full p-2 bg-base-100 text-base-content flex flex-col"
-    data-theme="light"
+    class="bg-base-100 text-base-content flex flex-col"
   >
     <!-- NAVBAR -->
-    <div class="w-full flex flex-row justify-between p-2 navbar">
-      <h1 class="text-3xl font-bold text text-accent">Valida8e</h1>
+    <div class="navbar bg-neutral text-accent">
+      <div class="navbar-start flex flex-row items-center gap-1">
+        <div class="w-12 h-12 overflow-hidden rounded-full">
+          <img src="logo.png" class="w-full h-full object-cover" />
+        </div>
+        <button class="text-4xl font-bold p-0 m-0 leading-none cursor-pointer">
+          Valida8e
+        </button>
+      </div>
       <!-- Theme Toggle -->
-      <label class="flex cursor-pointer gap-2">
+      <label class="flex cursor-pointer gap-2 navbar-end">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -78,6 +84,7 @@
         </svg>
       </label>
     </div>
+
     <div class="w-full h-full flex flex-col justify-center items-center">
       <!-- Loader -->
       <div id="loader" class="m-4 p-4">
@@ -97,39 +104,38 @@
       <!-- Card -->
       <div id="bigCard" class="w-full h-full">
         <div class="card w-full h-full shadow-xl p-4 rounded-xl flex flex-col">
-          <h3 class="text-lg font-bold text-primary" id="bigResult">
-            Review Analysis
-          </h3>
+          <blockquote class="border-l-4 border-gray-400 pl-4 italic text-base">
+            India is a country in South Asia
+          </blockquote>
           <div
             id="result"
             class="mt-3 text-sm text-gray-700 flex-1 w-full h-full"
           >
-            fhfhfhffjfhh
             <!-- Stats Section -->
             <div
               class="stats stats-vertical lg:stats-horizontal shadow overflow-hidden w-full"
             >
               <!-- Verdict Stat -->
               <div class="stat">
-                <div class="stat-title text-xs">Verdict</div>
-                <div class="stat-value text-xs text-primary" id="verdict">
-                  31K
+                <div class="stat-title text-base">Verdict</div>
+                <div class="stat-value text-primary" id="verdict">
+                  True
                 </div>
               </div>
 
               <!-- Confidence Stat -->
               <div class="stat">
-                <div class="stat-title text-xs">Confidence</div>
-                <div class="stat-value text-xs text-info" id="confidence">
-                  4,200
+                <div class="stat-title text-base">Confidence</div>
+                <div class="stat-value text-info" id="confidence">
+                  high
                 </div>
               </div>
 
               <!-- Evidence Quality Stat -->
               <div class="stat">
-                <div class="stat-title text-xs">Evidence Quality</div>
+                <div class="stat-title text-base">Evidence Quality</div>
                 <div
-                  class="stat-value text-xs text-accent"
+                  class="stat-value text-accent"
                   id="evidence-quality"
                 >
                   1,200
@@ -142,44 +148,48 @@
               <!-- Explanation Field -->
               <div class="alert alert-info shadow-lg">
                 <p>
-                  <strong>Explanation:</strong>
-                  <span id="explanation"
-                    >This is a detailed explanation of the verdict and
-                    analysis.</span
-                  >
+                  <strong >Explanation:</strong>
+                  <span id="explanation">
+                    "India is indeed a country located in South Asia. It is
+                    bounded by the Indian Ocean on the south, the Arabian Sea on
+                    the southwest, and the Bay of Bengal on the southeast. It
+                    shares land borders with Pakistan to the west; China, Nepal,
+                    and Bhutan to the north; and Bangladesh and Myanmar to the
+                    east."
+                  </span>
                 </p>
               </div>
 
               <!-- Key Points -->
-              <div class="alert alert-warning shadow-lg">
+              <div class="alert alert-error shadow-lg">
                 <p>
-                  <strong>Key Points:</strong>
-                  <span id="key-points">Point 1, Point 2, Point 3</span>
+                  <strong >Key Points:</strong>
+                  <span id="key-points">
+                    "India is located in South Asia", "It is surrounded by the
+                    Indian Ocean, Arabian Sea, and Bay of Bengal", "Shares land
+                    borders with Pakistan, China, Nepal, Bhutan, Bangladesh, and
+                    Myanmar"</span
+                  >
                 </p>
               </div>
 
               <!-- Supporting Evidence -->
-              <div
-                class="alert alert-success shadow-lg flex flex-row items-center justify-between"
-              >
-                <!-- Left Side: Button Heading -->
-                <button class="btn btn-link text-left p-0 m-0">
-                  <strong>Supporting Evidence</strong>
-                </button>
-
-                <!-- Right Side: Text Content -->
-                <p class="m-0" id="supporting-evidence">
-                  Evidence 1, Evidence 2
+              <div class="alert alert-warning shadow-lg">
+                <p>
+                  <strong >Supporting Evidence:</strong>
+                  <span id="supporting-evidence">
+                    "Multiple reputable sources unanimously agree on this fact."
+                  </span>
                 </p>
               </div>
 
               <!-- Source Consensus -->
-              <div class="alert alert-info shadow-lg">
+              <div class="alert alert-success shadow-lg">
                 <p>
-                  <strong>Source Consensus:</strong>
-                  <span id="source-consensus"
-                    >Description of source consensus.</span
-                  >
+                  <strong >Source Consensus:</strong>
+                  <span id="source-consensus">
+                    "Multiple reputable sources unanimously agree on this fact."
+                  </span>
                 </p>
               </div>
             </div>
