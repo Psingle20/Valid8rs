@@ -7,7 +7,7 @@ import io
 import base64
 
 try:
-    icon = Image.open("./logo.png")
+    icon = Image.open("./frontend/logo.png")
 except FileNotFoundError:
     st.error("Logo image not found. Please place 'logo.png' in the 'frontend' directory.")
     st.stop()
