@@ -7,7 +7,7 @@ import io
 import base64
 
 try:
-    icon = Image.open("frontend/logo.png")
+    icon = Image.open("./logo.png")
 except FileNotFoundError:
     st.error("Logo image not found. Please place 'logo.png' in the 'frontend' directory.")
     st.stop()
@@ -18,7 +18,7 @@ def img_to_bytes(img):
     return buf.getvalue()
 
 def main():
-    st.set_page_config(page_title="Valida8e", page_icon=icon, layout="centered")
+    st.set_page_config(page_title="Valid8", page_icon=icon, layout="centered")
 
     st.markdown(
         """
@@ -95,7 +95,7 @@ def main():
         """
         <div style='text-align:center; display:flex; align-items:center; justify-content:center;'>
             <img src="data:image/png;base64,{icon_base64}" style='max-height:80px; margin-right:10px;'/>
-            <h1 class='main-title'>Valida8e</h1>
+            <h1 class='main-title'>Valid8</h1>
         </div>
         """.format(icon_base64=base64.b64encode(img_to_bytes(icon)).decode('utf-8')),
         unsafe_allow_html=True
@@ -243,7 +243,7 @@ def main():
     st.markdown(
         """
         <div style='text-align: center'>
-            <a href="https://github.com/Psingle20/Valid8rs style='font-size: 1.2rem'">🚀 GitHub</a>
+            <a href="https://github.com/Psingle20/Valid8rs" style='font-size: 1.2rem'">🚀 GitHub</a>
         </div>
         """,
         unsafe_allow_html=True,
