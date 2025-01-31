@@ -3,6 +3,10 @@ chrome.runtime.sendMessage({ action: "popupReady" });
 
 // Listen for the analysis status updates
 chrome.runtime.onMessage.addListener((message) => {
+  console.log("MESSAGE! ", message)
+  const requestText = message.requestText;
+  console.log(requestText);
+  document.getElementById('requestText').innerText = requestText;
   const resultDiv = document.getElementById("result");
   const loaderDiv = document.getElementById("loader");
   const cardDiv = document.getElementById("bigCard"); // Get the card element
@@ -13,13 +17,12 @@ chrome.runtime.onMessage.addListener((message) => {
       cardDiv.style.display = "none"; // Hide the card during loading
       loaderDiv.style.display = "block";
       cardDiv.classList.add("hidden"); // Hide the card during loading
-      // resultDiv.innerHTML = ""; // Clear any previous results
-      // resultDiv.innerHTML = `<span class="loading loading-spinner text-primary"></span> Analyzing...`;
     } else if (message.status === "completed") {
       console.log("I AM COMPLETEDDD");
       loaderDiv.style.display = "none"; // Hide the loader
       cardDiv.style.display = "block";
       resultDiv.style.display = "block";
+      console.log(requestText);
       // Ensure the elements exist before trying to set text content
       const verdict = document.getElementById("verdict");
       const confidence = document.getElementById("confidence");
@@ -33,7 +36,7 @@ chrome.runtime.onMessage.addListener((message) => {
       if (confidence)
         confidence.textContent = message.results.analysis.confidence;
       if (evidenceQuality)
-        evidenceQuality.textContent = message.results.analysis.evidence_quality;
+        evidenceQuality.textContent = message.results.analysis.evidence_quality.overall_assessment;
       if (explanation)
         explanation.textContent = message.results.analysis.explanation;
       if (keyPoints)
@@ -54,22 +57,23 @@ chrome.runtime.onMessage.addListener((message) => {
 
 document.addEventListener("DOMContentLoaded", () => {
   const themeToggle = document.getElementById("themeToggle");
-  const body = document.body;
+  const htmlElement = document.documentElement;  // Get the <html> element
 
   // Load saved theme from localStorage or set default
   const savedTheme = localStorage.getItem("theme") || "light";
-  body.setAttribute("data-theme", savedTheme);
+  htmlElement.setAttribute("data-theme", savedTheme);
 
   themeToggle.addEventListener("click", () => {
-    const currentTheme = body.getAttribute("data-theme");
+    const currentTheme = htmlElement.getAttribute("data-theme");
 
     // Toggle between light and dark themes (or more)
     const newTheme = currentTheme === "light" ? "dark" : "light";
 
-    // Apply new theme to body
-    body.setAttribute("data-theme", newTheme);
+    // Apply new theme to <html> element
+    htmlElement.setAttribute("data-theme", newTheme);
 
     // Save preference
     localStorage.setItem("theme", newTheme);
   });
 });
+

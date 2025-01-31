@@ -1,4 +1,4 @@
-const server_url = "http://127.0.0.1:8000/";
+const server_url = "https://web-production-4c842.up.railway.app/";
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
@@ -35,6 +35,7 @@ chrome.contextMenus.onClicked.addListener((clickData) => {
               chrome.runtime.sendMessage({
                 action: "updateAnalysis",
                 status: "analyzing",
+                requestText: selectedText
               });
 
               // Make a POST request to the server with the selected review text
@@ -66,6 +67,7 @@ chrome.contextMenus.onClicked.addListener((clickData) => {
                     action: "updateAnalysis",
                     status: "completed",
                     results: {analysis: data.results.analysis},
+                    requestText: selectedText
                   });
                 })
                 .catch((error) => {
@@ -75,6 +77,7 @@ chrome.contextMenus.onClicked.addListener((clickData) => {
                     action: "updateAnalysis",
                     status: "error",
                     error: error.message,
+                    requestText: selectedText
                   });
                 });
             }
