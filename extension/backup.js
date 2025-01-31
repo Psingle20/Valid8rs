@@ -1,4 +1,4 @@
-const server_url = "http://127.0.0.1:8000/";
+const server_url = "https://web-production-4c842.up.railway.app";
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
