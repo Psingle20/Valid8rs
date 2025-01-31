@@ -31,7 +31,7 @@ Valid8 is an advanced fact-checking system that uses AI to analyze and verify Tw
 - Chromium Extension system
 
 
-### Installation
+## ⚙️⬇️ Installation
 
 1. Clone the repository:
 ```bash
