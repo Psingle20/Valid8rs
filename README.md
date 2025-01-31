@@ -65,7 +65,7 @@ GOOGLE_API_KEY=your_google_api_key
 ```bash
 uvicorn app.main:app --reload
 ```
-### Docker Installation
+## 🐳💻 Docker Installation
  1. Clone the repository:
 ```bash
 git clone https://github.com/Psingle20/Valid8rs.git
