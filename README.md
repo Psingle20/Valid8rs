@@ -14,6 +14,10 @@ Valid8 is an advanced fact-checking system that uses AI to analyze and verify Tw
 - **Engagement Analysis**: Consider social context and virality
 - **Async Processing**: Handle multiple requests efficiently
 
+## 🛠️ Architecture/System Design
+![Alt text](./diagram-export-1-16-2025-4_44_09-PM.png)
+
+
 ## 🚀 Quick Start
 
 ### Prerequisites
