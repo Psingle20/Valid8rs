@@ -1,7 +1,12 @@
 ### VALID8RS ###
 # Valid8: AI-Powered Fact-Checking System
 
-Valid8 is an advanced fact-checking system that uses AI to analyze and verify Twitter content in real-time. It combines multiple search engines, AI analysis, and source credibility assessment to provide comprehensive fact-checking results on frontend and Extension.
+Valid8 is a **fact-checking and analysis system** that utilizes a **completely open-source technology stack** to verify information efficiently. It features a **Uvicorn-powered FastAPI server** that retrieves sources from **DuckDuckGo, Google, and Wikipedia** to provide reliable references.  
+
+The system can **analyze tweets using their Tweet ID**, making it easy to fact-check social media claims. Additionally, a **browser extension** enables users to select any text on a webpage and instantly analyze its credibility across the internet.  
+
+To process and structure retrieved data, the system leverages **Groq** for optimized querying. The information is then analyzed by **Mistral** and **LLaMA 3.1**, both open-source LLMs, to determine the accuracy of the given fact.  
+
 
 ## 🌟 Features
 
