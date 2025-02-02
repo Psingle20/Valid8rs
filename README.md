@@ -7,7 +7,7 @@ The system can **analyze tweets using their Tweet ID**, making it easy to fact-c
 
 To process and structure retrieved data, the system leverages **Groq** for optimized querying. The information is then analyzed by **Mistral** and **LLaMA 3.1**, both open-source LLMs, to determine the accuracy of the given fact.  
 
-
+You can check out the demo [here](https://youtu.be/R2Cqx147jU4)
 ## 🌟 Features
 
 - **Real-time Tweet Analysis**: Fetch and analyze tweets instantly
