@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Get the OCR API key from environment variables
-#OCR_API_KEY = os.getenv("OCR_API_KEY") #locally
+# OCR_API_KEY = os.getenv("OCR_API_KEY") #locally
 OCR_API_KEY = st.secrets["OCR_API_KEY"]
 
 try:
@@ -327,7 +327,7 @@ def main():
     st.markdown(
         """
         <div style='text-align: center'>
-            <a href="https://github.com/Psingle20/Valid8rs" style='font-size: 1.2rem'">🚀 GitHub</a>
+            <span>To use our Chrome Extension:</span> <a href="https://github.com/Psingle20/Valid8rs" style='font-size: 1.2rem'"> 🚀 GitHub</a>
         </div>
         """,
         unsafe_allow_html=True,
