@@ -11,7 +11,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Get the OCR API key from environment variables
-OCR_API_KEY = os.getenv("OCR_API_KEY")
+#OCR_API_KEY = os.getenv("OCR_API_KEY") #locally
+OCR_API_KEY = st.secrets["OCR_API_KEY"]
 
 try:
     icon = Image.open("./frontend/logo.png")
