@@ -33,6 +33,7 @@ You can check out the demo [here](https://youtu.be/R2Cqx147jU4)
 - Groq API Key
 - GOOGLE_API_KEY
 - GOOGLE_CSE_ID
+- OCR_API_KEY
 - FastAPI
 - uvicorn
 - valkey
@@ -67,6 +68,7 @@ ENVIRONMENT=development
 LOG_LEVEL=INFO
 GOOGLE_CSE_ID=your_google_cse_id
 GOOGLE_API_KEY=your_google_api_key
+OCR_API_KEY= your OCR_API_KEY
 
 ```
 
@@ -89,6 +91,8 @@ ENVIRONMENT=development
 LOG_LEVEL=INFO
 GOOGLE_CSE_ID=your_google_cse_id
 GOOGLE_API_KEY=your_google_api_key
+OCR_API_KEY= your OCR_API_KEY
+
 
 ```
 3.Build the Docker image
@@ -199,6 +203,7 @@ Valid8rs/
 | GROQ_API_KEY | Your Groq API key | Yes |
 | GOOGLE_CSE_ID | Your Google CSE key | Yes |
 | GOOGLE_API_KEY |Your Google API key | Yes |
+| OCR_API_KEY | Your OCR API KEY      | Yes |
 | TWITTER_BEARER_TOKEN | Twitter API bearer token | Yes |
 | ENVIRONMENT | development/production | No |
 | LOG_LEVEL | INFO/DEBUG/WARNING/ERROR | No |
