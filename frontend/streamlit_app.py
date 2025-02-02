@@ -53,6 +53,9 @@ def main():
                 letter-spacing: 0.5px; /* Increase letter spacing slightly */
                 line-height: 1.6; /* Optional: Adjust line height for better readability */
             }
+            .main_conclusion{
+                color: #FF4500; /* Orange for main conclusion */
+            }
             .main-title {
                 font-size: 2.5em;
                 font-weight: bold;
@@ -107,6 +110,31 @@ def main():
             .consideration {
                 color: #AED2FF;
             }
+            .score-analysis {
+                color: #CDC1FF; /* Score analysis color */
+            }
+            
+            .score-box {
+                font-size: 1.5rem; /* Makes the score numbers big */
+                font-weight: bold; /* Makes the text bold */
+                color: white; /* White text color */
+                padding: 2px 4px; /* Adds padding for a button-like effect */
+                border-radius: 8px; /* Rounds the corners */
+                display: inline-block; /* Ensures it doesn't take the full width */
+                text-align: center;
+                margin: 4px 2px;
+            }
+
+            .reliability {
+                background: #ff5733; /* Bright reddish-orange for attention */
+                box-shadow: 0px 4px 10px rgba(255, 87, 51, 0.5);
+            }
+
+            .relevance {
+                background: #33c3ff; /* Bright blue for contrast */
+                box-shadow: 0px 4px 10px rgba(51, 195, 255, 0.5);
+            }
+
         </style>
         """,
         unsafe_allow_html=True,
@@ -150,28 +178,34 @@ def main():
                                     st.markdown(f"<div class='result-card'><span class='heading verdict'>Verdict:</span> {analysis.get('verdict', 'N/A')}</div>", unsafe_allow_html=True)
                                     st.markdown(f"<div class='result-card'><span class='heading confidence'>Confidence:</span> {analysis.get('confidence', 'N/A')}</div>", unsafe_allow_html=True)
                                     st.markdown(f"<div class='result-card'><span class='heading explanation'>Explanation:</span> {analysis.get('explanation', 'N/A')}</div>", unsafe_allow_html=True)
+                                    # CONSIDERATIONS
+                                    key_considerations = analysis.get('fact_check_summary', {}).get('key_considerations', [])
+                                    considerations_text = "<ul>" + "".join([f"<li>{consideration}</li>" for consideration in key_considerations]) + "</ul>"
+                                    st.markdown(f"<div class='result-card '><span class='heading consideration'>Key Considerations:</span> {considerations_text}</div>", unsafe_allow_html=True)
+                                    # EVALUATED SRCS
+                                    evaluated_sources = results.get("evaluated_sources", [])
+                                    if evaluated_sources:
+                                        reliability_score = evaluated_sources[0].get("reliability_score", "N/A")
+                                        relevance_score = evaluated_sources[0].get("relevance_score", "N/A")
+                                        
+                                        st.markdown(f"""
+                                            <div class='result-card'>
+                                                <b class='heading'>Scores:</b><br>
+                                                <span class='score-box reliability'>Reliability Score: {data['results']['evaluated_sources'][0].get('reliability_score', 'N/A')}</span>
+                                                <span class='score-box relevance'>Relevance Score: {data['results']['evaluated_sources'][0].get('relevance_score', 'N/A')}</span>
+                                            </div>
+                                        """, unsafe_allow_html=True)                           
                                     # Supporting Evidence
                                     supporting_evidence = analysis.get('supporting_evidence', [])
                                     if supporting_evidence:
                                         evidence_list = "<ul>" + "".join([f"<li><a href='{url}'>{url}</a></li>" for url in supporting_evidence]) + "</ul>"
                                         st.markdown(f"<div class='result-card'><b class='heading'>Supporting Evidence:</b> {evidence_list}</div>", unsafe_allow_html=True)
 
-                                    # Limitations and Key Considerations
-                                    limitations = analysis.get('limitations', [])
-                                    key_considerations = analysis.get('fact_check_summary', {}).get('key_considerations', [])
-                                    
-                                    limitations_text = "<ul>" + "".join([f"<li>{limitation}</li>" for limitation in limitations]) + "</ul>"
-                                    considerations_text = "<ul>" + "".join([f"<li>{consideration}</li>" for consideration in key_considerations]) + "</ul>"
-                                    
-                                    st.markdown(f"<div class='result-card '><span class='heading limitations'>Limitations:</span> {limitations_text}</div>", unsafe_allow_html=True)
-                                    st.markdown(f"<div class='result-card '><span class='heading consideration'>Key Considerations:</span> {considerations_text}</div>", unsafe_allow_html=True)
-
                                     # Evidence Analysis Section
                                     evidence_quality = analysis.get('evidence_quality', {})
                                     overall_assessment = evidence_quality.get('overall_assessment', 'N/A')
                                     strength_of_evidence = evidence_quality.get('strength_of_evidence', 'N/A')
                                     consistency_across_sources = evidence_quality.get('consistency_across_sources', 'N/A')
-                                    
                                     source_consensus = analysis.get('source_consensus', {}).get('description', 'N/A')
                                     
                                     st.markdown(f"""
@@ -183,7 +217,14 @@ def main():
                                             <b>Source Consensus:</b> {source_consensus}
                                         </div>
                                         """, unsafe_allow_html=True)  
-                                
+                                    
+                                    # Limitations
+                                    limitations = analysis.get('limitations', [])
+                                    limitations_text = "<ul>" + "".join([f"<li>{limitation}</li>" for limitation in limitations]) + "</ul>"
+                                    st.markdown(f"<div class='result-card '><span class='heading limitations'>Limitations:</span> {limitations_text}</div>", unsafe_allow_html=True)
+                                    
+                                    # Fact Check Summary
+                                    st.markdown(f"<div class='result-card'><b class='heading main_conclusion'>Summary:</b> {analysis.get('fact_check_summary').get('main_conclusion', 'N/A')}</div>", unsafe_allow_html=True)
 
                         else:
                             st.error(f"Error: {response.json().get('detail', 'Unknown error')}")
@@ -205,37 +246,46 @@ def main():
                         if response.status_code == 200:
                             data = response.json()
                             st.success("Analysis Complete! 🚀")
-                            
+                                                            # Display each response sectio
+                                
                             if data.get("results"):
                                 results = data["results"]
+                                # for response in results.get("responses", []):
+                                #     st.markdown(f"---\n{response}")
                                 if "analysis" in results:
                                     analysis = results["analysis"]
                                     st.markdown("### 🧐 Detailed Analysis")
                                     st.markdown(f"<div class='result-card'><span class='heading verdict'>Verdict:</span> {analysis.get('verdict', 'N/A')}</div>", unsafe_allow_html=True)
                                     st.markdown(f"<div class='result-card'><span class='heading confidence'>Confidence:</span> {analysis.get('confidence', 'N/A')}</div>", unsafe_allow_html=True)
                                     st.markdown(f"<div class='result-card'><span class='heading explanation'>Explanation:</span> {analysis.get('explanation', 'N/A')}</div>", unsafe_allow_html=True)
+                                    # CONSIDERATIONS
+                                    key_considerations = analysis.get('fact_check_summary', {}).get('key_considerations', [])
+                                    considerations_text = "<ul>" + "".join([f"<li>{consideration}</li>" for consideration in key_considerations]) + "</ul>"
+                                    st.markdown(f"<div class='result-card '><span class='heading consideration'>Key Considerations:</span> {considerations_text}</div>", unsafe_allow_html=True)
+                                    # EVALUATED SRCS
+                                    evaluated_sources = results.get("evaluated_sources", [])
+                                    if evaluated_sources:
+                                        reliability_score = evaluated_sources[0].get("reliability_score", "N/A")
+                                        relevance_score = evaluated_sources[0].get("relevance_score", "N/A")
+                                        
+                                        st.markdown(f"""
+                                            <div class='result-card'>
+                                                <b class='heading'>Scores:</b><br>
+                                                <span class='score-box reliability'>Reliability Score: {data['results']['evaluated_sources'][0].get('reliability_score', 'N/A')}</span>
+                                                <span class='score-box relevance'>Relevance Score: {data['results']['evaluated_sources'][0].get('relevance_score', 'N/A')}</span>
+                                            </div>
+                                        """, unsafe_allow_html=True)                           
                                     # Supporting Evidence
                                     supporting_evidence = analysis.get('supporting_evidence', [])
                                     if supporting_evidence:
                                         evidence_list = "<ul>" + "".join([f"<li><a href='{url}'>{url}</a></li>" for url in supporting_evidence]) + "</ul>"
                                         st.markdown(f"<div class='result-card'><b class='heading'>Supporting Evidence:</b> {evidence_list}</div>", unsafe_allow_html=True)
 
-                                    # Limitations and Key Considerations
-                                    limitations = analysis.get('limitations', [])
-                                    key_considerations = analysis.get('fact_check_summary', {}).get('key_considerations', [])
-                                    
-                                    limitations_text = "<ul>" + "".join([f"<li>{limitation}</li>" for limitation in limitations]) + "</ul>"
-                                    considerations_text = "<ul>" + "".join([f"<li>{consideration}</li>" for consideration in key_considerations]) + "</ul>"
-                                    
-                                    st.markdown(f"<div class='result-card '><span class='heading limitations'>Limitations:</span> {limitations_text}</div>", unsafe_allow_html=True)
-                                    st.markdown(f"<div class='result-card '><span class='heading consideration'>Key Considerations:</span> {considerations_text}</div>", unsafe_allow_html=True)
-
                                     # Evidence Analysis Section
                                     evidence_quality = analysis.get('evidence_quality', {})
                                     overall_assessment = evidence_quality.get('overall_assessment', 'N/A')
                                     strength_of_evidence = evidence_quality.get('strength_of_evidence', 'N/A')
                                     consistency_across_sources = evidence_quality.get('consistency_across_sources', 'N/A')
-                                    
                                     source_consensus = analysis.get('source_consensus', {}).get('description', 'N/A')
                                     
                                     st.markdown(f"""
@@ -247,7 +297,14 @@ def main():
                                             <b>Source Consensus:</b> {source_consensus}
                                         </div>
                                         """, unsafe_allow_html=True)  
-
+                                    
+                                    # Limitations
+                                    limitations = analysis.get('limitations', [])
+                                    limitations_text = "<ul>" + "".join([f"<li>{limitation}</li>" for limitation in limitations]) + "</ul>"
+                                    st.markdown(f"<div class='result-card '><span class='heading limitations'>Limitations:</span> {limitations_text}</div>", unsafe_allow_html=True)
+                                    
+                                    # Fact Check Summary
+                                    st.markdown(f"<div class='result-card'><b class='heading main_conclusion'>Summary:</b> {analysis.get('fact_check_summary').get('main_conclusion', 'N/A')}</div>", unsafe_allow_html=True)
                         else:
                             st.error(f"Error: {response.json().get('detail', 'Unknown error')}")
                     except Exception as e:
@@ -278,34 +335,40 @@ def main():
                                 
                                 if data.get("results"):
                                     results = data["results"]
-                                    if "analysis" in results:
-                                        analysis = results["analysis"]
-                                        st.markdown("### 🧐 Detailed Analysis")
-                                        st.markdown(f"<div class='result-card'><span class='heading verdict'>Verdict:</span> {analysis.get('verdict', 'N/A')}</div>", unsafe_allow_html=True)
-                                        st.markdown(f"<div class='result-card'><span class='heading confidence'>Confidence:</span> {analysis.get('confidence', 'N/A')}</div>", unsafe_allow_html=True)
-                                        st.markdown(f"<div class='result-card'><span class='heading explanation'>Explanation:</span> {analysis.get('explanation', 'N/A')}</div>", unsafe_allow_html=True)
-                                        # Supporting Evidence
+                                if "analysis" in results:
+                                    analysis = results["analysis"]
+                                    st.markdown("### 🧐 Detailed Analysis")
+                                    st.markdown(f"<div class='result-card'><span class='heading verdict'>Verdict:</span> {analysis.get('verdict', 'N/A')}</div>", unsafe_allow_html=True)
+                                    st.markdown(f"<div class='result-card'><span class='heading confidence'>Confidence:</span> {analysis.get('confidence', 'N/A')}</div>", unsafe_allow_html=True)
+                                    st.markdown(f"<div class='result-card'><span class='heading explanation'>Explanation:</span> {analysis.get('explanation', 'N/A')}</div>", unsafe_allow_html=True)
+                                    # CONSIDERATIONS
+                                    key_considerations = analysis.get('fact_check_summary', {}).get('key_considerations', [])
+                                    considerations_text = "<ul>" + "".join([f"<li>{consideration}</li>" for consideration in key_considerations]) + "</ul>"
+                                    st.markdown(f"<div class='result-card '><span class='heading consideration'>Key Considerations:</span> {considerations_text}</div>", unsafe_allow_html=True)
+                                    # EVALUATED SRCS
+                                    evaluated_sources = results.get("evaluated_sources", [])
+                                    if evaluated_sources:
+                                        reliability_score = evaluated_sources[0].get("reliability_score", "N/A")
+                                        relevance_score = evaluated_sources[0].get("relevance_score", "N/A")
+                                        
+                                        st.markdown(f"""
+                                            <div class='result-card'>
+                                                <b class='heading'>Scores:</b><br>
+                                                <span class='score-box reliability'>Reliability Score: {data['results']['evaluated_sources'][0].get('reliability_score', 'N/A')}</span>
+                                                <span class='score-box relevance'>Relevance Score: {data['results']['evaluated_sources'][0].get('relevance_score', 'N/A')}</span>
+                                            </div>
+                                        """, unsafe_allow_html=True)                           
+                                    # Supporting Evidence
                                     supporting_evidence = analysis.get('supporting_evidence', [])
                                     if supporting_evidence:
                                         evidence_list = "<ul>" + "".join([f"<li><a href='{url}'>{url}</a></li>" for url in supporting_evidence]) + "</ul>"
                                         st.markdown(f"<div class='result-card'><b class='heading'>Supporting Evidence:</b> {evidence_list}</div>", unsafe_allow_html=True)
-
-                                    # Limitations and Key Considerations
-                                    limitations = analysis.get('limitations', [])
-                                    key_considerations = analysis.get('fact_check_summary', {}).get('key_considerations', [])
-                                    
-                                    limitations_text = "<ul>" + "".join([f"<li>{limitation}</li>" for limitation in limitations]) + "</ul>"
-                                    considerations_text = "<ul>" + "".join([f"<li>{consideration}</li>" for consideration in key_considerations]) + "</ul>"
-                                    
-                                    st.markdown(f"<div class='result-card '><span class='heading limitations'>Limitations:</span> {limitations_text}</div>", unsafe_allow_html=True)
-                                    st.markdown(f"<div class='result-card '><span class='heading consideration'>Key Considerations:</span> {considerations_text}</div>", unsafe_allow_html=True)
 
                                     # Evidence Analysis Section
                                     evidence_quality = analysis.get('evidence_quality', {})
                                     overall_assessment = evidence_quality.get('overall_assessment', 'N/A')
                                     strength_of_evidence = evidence_quality.get('strength_of_evidence', 'N/A')
                                     consistency_across_sources = evidence_quality.get('consistency_across_sources', 'N/A')
-                                    
                                     source_consensus = analysis.get('source_consensus', {}).get('description', 'N/A')
                                     
                                     st.markdown(f"""
@@ -317,6 +380,15 @@ def main():
                                             <b>Source Consensus:</b> {source_consensus}
                                         </div>
                                         """, unsafe_allow_html=True)  
+                                    
+                                    # Limitations
+                                    limitations = analysis.get('limitations', [])
+                                    limitations_text = "<ul>" + "".join([f"<li>{limitation}</li>" for limitation in limitations]) + "</ul>"
+                                    st.markdown(f"<div class='result-card '><span class='heading limitations'>Limitations:</span> {limitations_text}</div>", unsafe_allow_html=True)
+                                    
+                                    # Fact Check Summary
+                                    st.markdown(f"<div class='result-card'><b class='heading main_conclusion'>Summary:</b> {analysis.get('fact_check_summary').get('main_conclusion', 'N/A')}</div>", unsafe_allow_html=True)
+  
                         else:
                             st.error("Error extracting text from the image.")
                     except Exception as e:
