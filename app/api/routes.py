@@ -1,13 +1,15 @@
 from fastapi import APIRouter, HTTPException, BackgroundTasks, Depends
 from fastapi.responses import JSONResponse
+from fastapi.requests import Request
+from fastapi.responses import StreamingResponse
 from typing import Dict
 from uuid import uuid4
 from datetime import datetime
+import asyncio
 
 from .models import TextCheckRequest, TweetCheckRequest, CheckResponse
 from .dependencies import get_fact_checker, get_check_results
-from ..utils.logging import get_logger
-from ..services.fact_checker import FactCheckManager
+from ..utils.logging import get_logger, log_queue
 
 MAX_TEXT_LENGTH = 300
 
@@ -21,12 +23,11 @@ router = APIRouter()
 async def check_text(
     request: TextCheckRequest,
     background_tasks: BackgroundTasks,
-    fact_checker: FactCheckManager = Depends(get_fact_checker),
+    fact_checker = Depends(get_fact_checker),
     check_results: Dict = Depends(get_check_results)
 ):
     check_id = str(uuid4())
-    # logger.info(f"Starting text check {check_id}")
-    # print(f"Running fact check for text: {request}")
+    logger.info(f"Starting text check {check_id}")
     
     check_results[check_id] = {
         "check_id": check_id,
@@ -34,7 +35,6 @@ async def check_text(
         "started_at": datetime.utcnow()
     }
 
-    # config = {"text": request.text}
     config = {"text": truncate_text(request.text)}
     
     try:
@@ -45,10 +45,10 @@ async def check_text(
                 config,
                 check_results
             )
-            # logger.info(f"Background check {check_id} initiated")
+            logger.info(f"Background check {check_id} initiated")
         else:
             await fact_checker.run_check(check_id, config, check_results)
-            # logger.info(f"Synchronous check {check_id} completed")
+            logger.info(f"Synchronous check {check_id} completed")
 
         return CheckResponse(**check_results[check_id])
     except Exception as e:
@@ -59,7 +59,7 @@ async def check_text(
 async def check_tweet(
     request: TweetCheckRequest,
     background_tasks: BackgroundTasks,
-    fact_checker: FactCheckManager = Depends(get_fact_checker),
+    fact_checker = Depends(get_fact_checker),
     check_results: Dict = Depends(get_check_results)
 ):
     check_id = str(uuid4())
@@ -81,6 +81,8 @@ async def check_tweet(
                 config,
                 check_results
             )
+            await fact_checker.run_check(check_id, config, check_results)
+
             logger.info(f"Background check {check_id} initiated")
         else:
             await fact_checker.run_check(check_id, config, check_results)
@@ -91,14 +93,15 @@ async def check_tweet(
         logger.error(f"Error in check_tweet {check_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/check/{check_id}", response_model=CheckResponse)
-async def get_check_status(
-    check_id: str,
-    check_results: Dict = Depends(get_check_results)
-):
-    # logger.info(f"Fetching status for check {check_id}")
-    if check_id not in check_results:
-        logger.warning(f"Check {check_id} not found")
-        raise HTTPException(status_code=404, detail="Check not found")
-    
-    return CheckResponse(**check_results[check_id])
+@router.get("/logs")
+async def stream_logs():
+    """Stream logs in real-time using SSE"""
+    async def event_generator():
+        while True:
+            try:
+                log = log_queue.get_nowait()  # Get log from queue
+                yield f"data: {log}\n\n"
+            except asyncio.QueueEmpty:
+                await asyncio.sleep(0.5)
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
