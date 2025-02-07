@@ -1,48 +1,159 @@
-<!DOCTYPE html>
-<html lang="en-IN">
-  <head>
-    <title>Google Search</title>
+import streamlit as st
+import requests
+import io
+import base64
+import os
+from PIL import Image
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+OCR_API_KEY = os.getenv("OCR_API_KEY")
+
+# Load Logo
+try:
+    icon = Image.open("./frontend/logo.png")
+except FileNotFoundError:
+    st.error("Logo image not found. Please place 'logo.png' in the 'frontend' directory.")
+    st.stop()
+
+# Utility Functions
+def img_to_bytes(img):
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    return buf.getvalue()
+
+def image_to_text(image):
+    img_bytes = io.BytesIO()
+    image.save(img_bytes, format='PNG')
+    img_bytes = img_bytes.getvalue()
+    response = requests.post(
+        "https://api.ocr.space/parse/image",
+        files={"file": ("image.png", img_bytes)},
+        data={"apikey": OCR_API_KEY, "language": "eng"},
+    )
+    result = response.json()
+    return result["ParsedResults"][0]["ParsedText"].strip() if result["OCRExitCode"] == 1 else "Error: Unable to extract text."
+
+# Streamlit App
+st.set_page_config(page_title="Valid8", page_icon=icon, layout="centered")
+
+# Styling
+st.markdown(
+    """
     <style>
-      body {
-        background-color: var(--xhUGwc);
-      }
+        @import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap');
+        body { font-family: 'Karla', sans-serif; letter-spacing: 0.5px; line-height: 1.6; }
+        .main-title { font-size: 3em; font-weight: bold; color: #FFFFFF; text-align: center; }
+        .sub-title { font-size: 1.2em; text-align: center; margin-bottom: 20px; color: #555; }
+        .terminal-container { background: #000; color: #0f0; padding: 10px; font-family: monospace; height: 250px; overflow-y: auto; border-radius: 5px; white-space: pre-wrap; }
     </style>
-  </head>
-  <body>
-    <noscript
-      ><style>
-        table,
-        div,
-        span,
-        p {
-          display: none;
-        }</style
-      ><meta
-        content="0;url=/httpservice/retry/enablejs?sei=_PuYZ6nnINW5seMP3fz18Ag"
-        http-equiv="refresh"
-      />
-      <div style="display: block">
-        Please click
-        <a href="/httpservice/retry/enablejs?sei=_PuYZ6nnINW5seMP3fz18Ag"
-          >here</a
-        >
-        if you are not redirected within a few seconds.
-      </div></noscript
-    >
-    <script nonce="vnkDtlPMTZQfzGK_hWig" />
-    <table style="font-size: 13px; font-family: Arial, Helvetica, sans-serif">
-      <tr>
-        <td>
-          <div>
-            Checking your browser before accessing <b>www.google.com</b>.
-          </div>
-          <div>
-            This process is automatic. Your browser will redirect to your
-            requested content shortly.
-          </div>
-          <div>Please allow up to 5 seconds&hellip;</div>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Title
+st.markdown(
+    f"""
+    <div style='text-align:center;'>
+        <img src="data:image/png;base64,{base64.b64encode(img_to_bytes(icon)).decode('utf-8')}" style='max-height:75px; margin-bottom: 10px; '/>
+        <span class='main-title' style ='padding-top: 10px;'>Valid8</span>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+st.markdown("<div class='sub-title'>Check your facts & verify your sources!</div>", unsafe_allow_html=True)
+
+# Terminal for Logs (JavaScript SSE)
+st.markdown("### 🔍 Live Logs")
+st.markdown('<div id="log-container" class="terminal-container"></div>', unsafe_allow_html=True)
+
+# Inject JavaScript for SSE
+st.markdown(
+    """
+    <script>
+        const eventSource = new EventSource("http://localhost:8000/api/v1/logs");
+
+        eventSource.onmessage = (event) => {
+            console.log("Log:", event.data);
+            const logContainer = document.getElementById("log-container");
+            logContainer.innerText += event.data + "\\n";
+            logContainer.scrollTop = logContainer.scrollHeight; // Auto-scroll
+        };
+
+        eventSource.onerror = (error) => {
+            console.error("EventSource failed:", error);
+        };
+    </script>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Fact-Check Options
+check_type = st.radio("What would you like to fact-check?", ["Tweet", "Text", "Image"])
+
+# Tweet Fact-Check
+if check_type == "Tweet":
+    tweet_input = st.text_input("Enter Tweet ID:", placeholder="Enter tweet ID")
+    if st.button("Check Tweet") and tweet_input:
+        with st.spinner("Analyzing tweet..."):
+            try:
+                response = requests.post("http://localhost:8000/api/v1/check/tweet", json={"tweet_id": tweet_input.strip()})
+                if response.status_code == 200:
+                    data = response.json()
+                    st.success("Analysis Complete!")
+                    st.json(data)
+                else:
+                    st.error(f"Error: {response.json().get('detail', 'Unknown error')}")
+            except Exception as e:
+                st.error(f"Error connecting to API: {str(e)}")
+
+# Text Fact-Check
+elif check_type == "Text":
+    text_input = st.text_area("Enter text to fact-check:", placeholder="Type or paste the text...")
+    if st.button("Check Text") and text_input:
+        with st.spinner("Analyzing text..."):
+            try:
+                response = requests.post("http://localhost:8000/api/v1/check/text", json={"text": text_input})
+                if response.status_code == 200:
+                    data = response.json()
+                    st.success("Analysis Complete!")
+                    st.json(data)
+                else:
+                    st.error(f"Error: {response.json().get('detail', 'Unknown error')}")
+            except Exception as e:
+                st.error(f"Error connecting to API: {str(e)}")
+
+# Image Fact-Check
+else:
+    image_input = st.file_uploader("Upload an image for text extraction:", type=["png", "jpg", "jpeg"])
+    if st.button("Extract and Analyze Image") and image_input:
+        with st.spinner("Extracting text from image..."):
+            try:
+                image = Image.open(image_input)
+                extracted_text = image_to_text(image)
+                if extracted_text != "Error: Unable to extract text.":
+                    st.success("Text extracted successfully!")
+                    st.text_area("Extracted Text", value=extracted_text, height=200)
+                    response = requests.post("http://localhost:8000/api/v1/check/text", json={"text": extracted_text})
+                    if response.status_code == 200:
+                        data = response.json()
+                        st.success("Analysis Complete!")
+                        st.json(data)
+                    else:
+                        st.error(f"Error: {response.json().get('detail', 'Unknown error')}")
+                else:
+                    st.error("Error extracting text from the image.")
+            except Exception as e:
+                st.error(f"Error processing the image: {str(e)}")
+
+# Footer
+st.markdown("---")
+st.markdown(
+    """
+    <div style='text-align: center'>
+        <span>To use our Chrome Extension:</span> <a href="https://github.com/Psingle20/Valid8rs" style='font-size: 1.2rem'> 🚀 GitHub</a>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
