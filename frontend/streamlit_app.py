@@ -32,7 +32,7 @@ def image_to_text(image):
     response = requests.post(
         "https://api.ocr.space/parse/image",
         files={"file": ("image.png", img_bytes)},
-        data={"apikey": "your-api-key", "language": "eng"},
+        data={"apikey": OCR_API_KEY, "language": "eng"},
     )
     result = response.json()
     return result["ParsedResults"][0]["ParsedText"].strip() if result["OCRExitCode"] == 1 else "Error: Unable to extract text."
