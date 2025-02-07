@@ -5,7 +5,7 @@ Valid8 is a **fact-checking and analysis system** that utilizes a **completely o
 
 The system can **analyze tweets using their Tweet ID**, making it easy to fact-check social media claims. Additionally, a **browser extension** enables users to select any text on a webpage and instantly analyze its credibility across the internet.  
 
-To process and structure retrieved data, the system leverages **Groq** for optimized querying. The information is then analyzed by **Mistral** and **LLaMA 3.1**, both open-source LLMs, to determine the accuracy of the given fact.  
+To process and structure retrieved data, the system leverages **Groq** for optimized querying. The information is then analyzed by **mixtral-8x7b-32768** and **llama-3.3-70b-versatile**, both open-source LLMs, to determine the accuracy of the given fact.  
 
 You can check out the demo [here](https://youtu.be/R2Cqx147jU4)
 ## 🌟 Features
