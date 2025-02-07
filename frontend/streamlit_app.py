@@ -9,7 +9,8 @@ import streamlit.components.v1 as components  # Import for HTML execution
 
 # Load environment variables
 load_dotenv()
-OCR_API_KEY = os.getenv("OCR_API_KEY")
+# OCR_API_KEY = os.getenv("OCR_API_KEY") # local
+OCR_API_KEY = st.secrets["OCR_API_KEY"] # streamlit
 
 # Load Logo
 try:
