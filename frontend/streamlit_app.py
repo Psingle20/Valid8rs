@@ -232,7 +232,7 @@ def start_logs():
 
         <script>
             console.log("Starting SSE...");
-            const eventSource = new EventSource("http://localhost:8000/api/v1/logs");
+            const eventSource = new EventSource("https://web-production-4c842.up.railway.app/api/v1/logs");
 
             eventSource.onmessage = (event) => {
                 console.log("Log:", event.data);
@@ -256,7 +256,7 @@ if check_type == "Tweet":
         start_logs()
         with st.spinner("Analyzing tweet..."):
             try:
-                response = requests.post("http://localhost:8000/api/v1/check/tweet", json={"tweet_id": tweet_input.strip()})
+                response = requests.post("https://web-production-4c842.up.railway.app/api/v1/check/tweet", json={"tweet_id": tweet_input.strip()})
                 if response.status_code == 200:
                     data = response.json()
                     # st.success("Analysis Complete!")
@@ -275,7 +275,7 @@ elif check_type == "Text":
         start_logs()
         with st.spinner("Analyzing text..."):
             try:
-                response = requests.post("http://localhost:8000/api/v1/check/text", json={"text": text_input})
+                response = requests.post("https://web-production-4c842.up.railway.app/api/v1/check/text", json={"text": text_input})
                 if response.status_code == 200:
                     data = response.json()
                     # st.success("Analysis Complete!")
@@ -298,7 +298,7 @@ else:
                 if extracted_text != "Error: Unable to extract text.":
                     st.success("Text extracted successfully!")
                     st.text_area("Extracted Text", value=extracted_text, height=200)
-                    response = requests.post("http://localhost:8000/api/v1/check/text", json={"text": extracted_text})
+                    response = requests.post("https://web-production-4c842.up.railway.app/api/v1/check/text", json={"text": extracted_text})
                     if response.status_code == 200:
                         data = response.json()
                         # st.success("Analysis Complete!")
