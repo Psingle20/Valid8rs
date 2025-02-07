@@ -56,7 +56,9 @@ class MultiSearchTool:
             results = []
             
             if "items" in data:
-                for item in data["items"]: 
+                for item in data["items"]:
+                    logger.info('Found Google result: ( title: "%s", snippet: "%s" )', item.get("title"), item.get("snippet"))
+
                     found_res = {
                         "title": item["title"],
                         "snippet": item["snippet"],
@@ -84,7 +86,7 @@ class MultiSearchTool:
             with DDGS() as ddgs:
                 results = []
                 for r in ddgs.text(query, max_results=5):
-                    logger.info(f"Found DuckDuckGo r: {r}")
+                    logger.info('Found DuckDuckGo result: [ title: "%s", snippet: "%s" ]', r.get("title"), r.get("body"))
                     results.append({
                         "title": r['title'],
                         "snippet": r['body'],
@@ -112,6 +114,7 @@ class MultiSearchTool:
                     summary = page.summary
                     if len(summary) > 300:
                         summary = summary[:300] + "..."
+                    logger.info('Found Wikipedia result: { title: "%s", snippet: "%s" }', page.title, summary)
 
                     results.append({
                         "title": page.title,
