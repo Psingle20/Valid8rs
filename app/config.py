@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     MAX_WORKERS: int = 3
     google_cse_id: str
     google_api_key: str
-    OCR_API_KEY: str
+    # OCR_API_KEY: str
 
     class Config:
         env_file = ".env"

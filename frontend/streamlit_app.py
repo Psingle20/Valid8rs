@@ -10,7 +10,7 @@ import streamlit.components.v1 as components  # Import for HTML execution
 # Load environment variables
 load_dotenv()
 # OCR_API_KEY = os.getenv("OCR_API_KEY") # local
-OCR_API_KEY = st.secrets["OCR_API_KEY"] # streamlit
+# OCR_API_KEY = st.secrets["OCR_API_KEY"] # streamlit
 
 # Load Logo
 try:
@@ -32,7 +32,7 @@ def image_to_text(image):
     response = requests.post(
         "https://api.ocr.space/parse/image",
         files={"file": ("image.png", img_bytes)},
-        data={"apikey": OCR_API_KEY, "language": "eng"},
+        data={"apikey": "your-api-key", "language": "eng"},
     )
     result = response.json()
     return result["ParsedResults"][0]["ParsedText"].strip() if result["OCRExitCode"] == 1 else "Error: Unable to extract text."
