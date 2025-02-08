@@ -251,12 +251,12 @@ def start_logs():
 
 # Tweet Fact-Check
 if check_type == "Tweet":
-    tweet_input = st.text_input("Enter Tweet ID:", placeholder="Enter tweet ID")
+    tweet_input = st.text_input("Enter Tweet ID or Tweet URL:", placeholder="Enter tweet ID")
     if st.button("Check Tweet"):
         start_logs()
         with st.spinner("Analyzing tweet..."):
             try:
-                response = requests.post("https://web-production-4c842.up.railway.app/api/v1/check/tweet", json={"tweet_id": tweet_input.strip()})
+                response = requests.post("https://web-production-4c842.up.railway.app/api/v1/check/tweet", json={"tweet_id": tweet_input.split("/")[-1]})
                 if response.status_code == 200:
                     data = response.json()
                     # st.success("Analysis Complete!")
