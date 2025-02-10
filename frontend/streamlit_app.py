@@ -215,7 +215,7 @@ st.markdown(
 st.markdown("<div class='sub-title fun-text'>The internet is full of nonsense — let’s clean it up!🤷‍♀️🚀</div>", unsafe_allow_html=True)
 
 # Fact-Check Options
-check_type = st.radio("What would you like to fact-check?", ["Tweet", "Text", "Image"])
+check_type = st.radio("What would you like to fact-check?", ["Text", "Tweet", "Image"])
 
 # Terminal for Logs (Initially Hidden)
 
