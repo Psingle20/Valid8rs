@@ -264,7 +264,7 @@ if check_type == "Tweet":
                     display_analysis_results(data)
                     
                 else:
-                    st.error(f"Error: {response.json().get('detail', 'Unknown error')}")
+                    st.error(f"Invalid Tweet URL or ID! Error: {response.json().get('detail', 'Unknown error')}")
             except Exception as e:
                 st.error(f"Error connecting to API: {str(e)}")
 
