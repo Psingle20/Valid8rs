@@ -212,7 +212,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-st.markdown("<div class='sub-title'>Internet is full of Crap 🤷‍♀️ Lets Clean it up! Shall we?</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub-title fun-text'>The internet is full of nonsense — let’s clean it up!🤷‍♀️🚀</div>", unsafe_allow_html=True)
 
 # Fact-Check Options
 check_type = st.radio("What would you like to fact-check?", ["Tweet", "Text", "Image"])
@@ -254,7 +254,7 @@ if check_type == "Tweet":
     tweet_input = st.text_input("Enter Tweet ID or Tweet URL:", placeholder="Enter tweet ID or Tweet URL...")
     if st.button("Check Tweet"):
         start_logs()
-        with st.spinner("Analyzing tweet... Grab a Snack 🍿 While we dig deep!!"):
+        with st.spinner("Analyzing tweet... Grab a snack 🍿 while we dig deep!!"):
             try:
                 response = requests.post("https://web-production-4c842.up.railway.app/api/v1/check/tweet", json={"tweet_id": tweet_input.split("/")[-1]})
                 if response.status_code == 200:
@@ -273,7 +273,7 @@ elif check_type == "Text":
     text_input = st.text_area("Enter text to fact-check:", placeholder="Type or paste the text...")
     if st.button("Check Text"):
         start_logs()
-        with st.spinner("Analyzing text... Grab a Snack 🍿 while we dig deep!!"):
+        with st.spinner("Analyzing text... Grab a snack 🍿 while we dig deep!!"):
             try:
                 response = requests.post("https://web-production-4c842.up.railway.app/api/v1/check/text", json={"text": text_input})
                 if response.status_code == 200:
@@ -291,7 +291,7 @@ else:
     image_input = st.file_uploader("Upload an image for text extraction:", type=["png", "jpg", "jpeg"])
     if st.button("Extract and Analyze Image"):
         start_logs()
-        with st.spinner("Extracting and Analyzing text from image... Grab a Snack 🍿 while we dig deep!!"):
+        with st.spinner("Extracting and Analyzing text from image... Grab a snack 🍿 while we dig deep!!"):
             try:
                 image = Image.open(image_input)
                 extracted_text = image_to_text(image)
