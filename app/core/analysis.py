@@ -149,7 +149,7 @@ Return ONLY a JSON object in this exact format, with no additional text:
                     },
                     {"role": "user", "content": prompt}
                 ],
-                model="llama-3.3-70b-versatile",
+                model="gemma2-9b-it",
                 temperature=0.1,
                 max_tokens=2000
             )
